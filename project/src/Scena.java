@@ -9,7 +9,7 @@ public class Scena extends JFrame{
         panel = new OggettiDiScena();
         this.add(panel);
         this.setTitle("PUNG");
-        this.setResizable(true);
+        this.setResizable(false);
         this.setBackground(Color.gray);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();

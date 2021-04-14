@@ -21,12 +21,16 @@ public class OggettiDiScena extends JPanel implements Runnable{
     Giocatore giocatore1;
     Giocatore giocatore2;
     Pallina Pallina;
+    Modifier freeze;
+    Modifier stratch;
+    Modifier straight;
     Tabellone tabellone;
 
     //costruttore
     OggettiDiScena(){
         newGiocatori();
         newPallina();
+        newModifier();
         tabellone = new Tabellone(GAME_WIDTH,GAME_HEIGHT);
         this.setFocusable(true);
         this.addKeyListener(new AL());
@@ -39,6 +43,13 @@ public class OggettiDiScena extends JPanel implements Runnable{
     public void newPallina() {
         random = new Random();
         Pallina = new Pallina((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+    }
+    // creo i powerup
+    public void newModifier() {
+        random = new Random();
+        freeze = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+        straight = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+        stratch = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
     }
     //creo i giocatori
     public void newGiocatori() {
@@ -57,6 +68,9 @@ public class OggettiDiScena extends JPanel implements Runnable{
         giocatore1.disegna(g);
         giocatore2.disegna(g);
         Pallina.disegna(g);
+        freeze.disegna1(g);
+        stratch.disegna2(g);
+        straight.disegna3(g);
         tabellone.disegna(g);
 //        Toolkit.getDefaultToolkit().sync();
 
@@ -115,12 +129,14 @@ public class OggettiDiScena extends JPanel implements Runnable{
             tabellone.giocatore2++;
             newGiocatori();
             newPallina();
+            newModifier();
             System.out.println("Giocatore 2: "+tabellone.giocatore2);
         }
         if(Pallina.x >= GAME_WIDTH-PALLINA_DIAMETER) {
             tabellone.giocatore1++;
             newGiocatori();
             newPallina();
+            newModifier();
             System.out.println("Giocatore 1: "+tabellone.giocatore1);
         }
     }
