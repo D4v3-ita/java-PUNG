@@ -8,6 +8,8 @@ public class OggettiDiScena extends JPanel implements Runnable{
 
 
     //attributi
+//    static boolean spia;
+    int id;
     static final int GAME_WIDTH = 1200;
     static final int GAME_HEIGHT = (int)(GAME_WIDTH * (0.5555));
     static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
@@ -94,8 +96,14 @@ public class OggettiDiScena extends JPanel implements Runnable{
         if(Pallina.y >= GAME_HEIGHT-PALLINA_DIAMETER) {
             Pallina.setYDirection(-Pallina.velocitaY);
         }
-        //bounce Pallina off giocatori
+
+
+
+
+        //pallina colpisce giocatori
         if(Pallina.intersects(giocatore1)) {
+//            spia= true;
+
             Pallina.velocitaX = Math.abs(Pallina.velocitaX);
 //            Pallina.velocitaX++;
 //            if(Pallina.velocitaY>0)
@@ -106,6 +114,7 @@ public class OggettiDiScena extends JPanel implements Runnable{
             Pallina.setYDirection(Pallina.velocitaY);
         }
         if(Pallina.intersects(giocatore2)) {
+//            spia= false;
             Pallina.velocitaX = Math.abs(Pallina.velocitaX);
 //            Pallina.velocitaX++;
 //            if(Pallina.velocitaY>0)
@@ -115,6 +124,31 @@ public class OggettiDiScena extends JPanel implements Runnable{
             Pallina.setXDirection(-Pallina.velocitaX);
             Pallina.setYDirection(Pallina.velocitaY);
         }
+
+        //pallina colpisce ghiaccio e frizza giocatore di destra
+        if(Pallina.intersects(freeze) && (id==1)) {
+            KeyEvent e = null;
+            if(e.getKeyCode()==KeyEvent.VK_UP) {
+                giocatore2.y= 0;;
+            }
+            if(e.getKeyCode()==KeyEvent.VK_DOWN) {
+                giocatore2.y= 0;
+            }
+        }
+
+        //pallina colpisce ghiaccio e frizza giocatore di sinistra
+        else if(Pallina.intersects(freeze) && (id!=1)) {
+            KeyEvent e = null;
+            if(e.getKeyCode()==KeyEvent.VK_W) {
+                giocatore1.y= 0;
+            }
+            if(e.getKeyCode()==KeyEvent.VK_S) {
+                giocatore1.y= 0;
+            }
+        }
+
+
+
         //ferma i giocatori al bordo della finestra
         if(giocatore1.y<=0)
             giocatore1.y=0;
@@ -161,7 +195,7 @@ public class OggettiDiScena extends JPanel implements Runnable{
             }
         }
     }
-    
+
     //classe interna per rispondere a pressione o rilascio tasti
     public class AL extends KeyAdapter{
         public void keyPressed(KeyEvent e) {
