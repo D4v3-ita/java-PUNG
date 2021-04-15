@@ -76,7 +76,7 @@ public class Giocatore extends Rectangle{
     //metodo per colorare i giocatori
     public void disegna(Graphics g) {
         if(id==1)
-            g.setColor(Color.white);
+            g.setColor(Color.yellow);
         else
             g.setColor(Color.yellow);
         g.fillRect(x, y, width, height);
