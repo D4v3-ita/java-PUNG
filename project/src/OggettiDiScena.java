@@ -9,7 +9,8 @@ public class OggettiDiScena extends JPanel implements Runnable{
 
     //attributi
 //    static boolean spia;
-    int id;
+    static int od=0;
+    static int od1=0;
     static final int GAME_WIDTH = 1200;
     static final int GAME_HEIGHT = (int)(GAME_WIDTH * (0.5555));
     static final Dimension SCREEN_SIZE = new Dimension(GAME_WIDTH,GAME_HEIGHT);
@@ -23,9 +24,10 @@ public class OggettiDiScena extends JPanel implements Runnable{
     Giocatore giocatore1;
     Giocatore giocatore2;
     Pallina Pallina;
-    Modifier freeze;
-    Modifier stratch;
-    Modifier straight;
+    Modifier ostacolo1;
+    Modifier ostacolo2;
+    Modifier ostacolo3;
+    Modifier ostacolo4;
     Tabellone tabellone;
 
     //costruttore
@@ -49,9 +51,11 @@ public class OggettiDiScena extends JPanel implements Runnable{
     // creo i powerup
     public void newModifier() {
         random = new Random();
-        freeze = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
-        straight = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
-        stratch = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+        ostacolo1 = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+        ostacolo3 = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+        ostacolo2 = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+        ostacolo4 = new Modifier((GAME_WIDTH/2)-(PALLINA_DIAMETER/2),random.nextInt(GAME_HEIGHT-PALLINA_DIAMETER),PALLINA_DIAMETER,PALLINA_DIAMETER);
+
     }
     //creo i giocatori
     public void newGiocatori() {
@@ -70,11 +74,22 @@ public class OggettiDiScena extends JPanel implements Runnable{
         giocatore1.disegna(g);
         giocatore2.disegna(g);
         Pallina.disegna(g);
-        freeze.disegna1(g);
-        stratch.disegna2(g);
-        straight.disegna3(g);
+        ostacolo1.disegna2(g);
+        ostacolo2.disegna2(g);
+        ostacolo3.disegna2(g);
+        ostacolo4.disegna2(g);
         tabellone.disegna(g);
-//        Toolkit.getDefaultToolkit().sync();
+
+        // stampa messaggio quando finisce la partita
+        if(tabellone.giocatore1 == 11) {
+            g.setColor(Color.white);
+            g.drawString("PARTITA TERMINATA", 340, 130);
+            g.drawString("VINCE IL GIOCATORE 1", 320, 200);
+        } else if(tabellone.giocatore2 == 11) {
+            g.setColor(Color.white);
+            g.drawString("PARTITA TERMINATA", 340, 130);
+            g.drawString("VINCE IL GIOCATORE 2", 320, 200);
+        }
 
     }
 
@@ -96,6 +111,30 @@ public class OggettiDiScena extends JPanel implements Runnable{
         if(Pallina.y >= GAME_HEIGHT-PALLINA_DIAMETER) {
             Pallina.setYDirection(-Pallina.velocitaY);
         }
+        // quando si raggiunge il punteggio massimo (11) finisce la partita
+        if(tabellone.giocatore1 == 11) {
+            KeyEvent e = null;
+            if(e.getKeyCode()==KeyEvent.VK_W && e.getKeyCode()==KeyEvent.VK_S) {
+                giocatore1.y= 0;
+                giocatore1.y= 0;
+            }
+            if(e.getKeyCode()==KeyEvent.VK_UP && e.getKeyCode()==KeyEvent.VK_DOWN) {
+                giocatore2.y= 0;
+                giocatore2.y= 0;
+            }
+
+        } else if(tabellone.giocatore2 == 11) {
+            KeyEvent e = null;
+            if(e.getKeyCode()==KeyEvent.VK_W && e.getKeyCode()==KeyEvent.VK_S) {
+                giocatore1.y= 0;
+                giocatore1.y= 0;
+            }
+            if(e.getKeyCode()==KeyEvent.VK_UP && e.getKeyCode()==KeyEvent.VK_DOWN) {
+                giocatore2.y= 0;
+                giocatore2.y= 0;
+            }
+        }
+
 
 
 
@@ -103,6 +142,53 @@ public class OggettiDiScena extends JPanel implements Runnable{
         //pallina colpisce giocatori
         if(Pallina.intersects(giocatore1)) {
 //            spia= true;
+            od=1;
+
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+            Pallina.velocitaX++;
+            if(Pallina.velocitaY>0)
+                Pallina.velocitaY++;
+            else
+                Pallina.velocitaY--;
+            Pallina.setXDirection(Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
+        }
+        if(Pallina.intersects(giocatore2)) {
+//            spia= false;
+            od=2;
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+            Pallina.velocitaX++;
+            if(Pallina.velocitaY>0)
+                Pallina.velocitaY++;
+            else
+                Pallina.velocitaY--;
+            Pallina.setXDirection(-Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
+        }
+
+        //pallina collide contro gli ostacoli
+        if(Pallina.intersects(ostacolo1)){
+            od1=1;
+        }
+        if(Pallina.intersects(ostacolo2)){
+            od1=2;
+        }
+        if(Pallina.intersects(ostacolo3)){
+            od1=3;
+        }
+
+        if(Pallina.intersects(ostacolo1) && od==1) {
+
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+//            Pallina.velocitaX++;
+//            if(Pallina.velocitaY>0)
+//                Pallina.velocitaY++;
+//            else
+//                Pallina.velocitaY--;
+            Pallina.setXDirection(-Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
+        }
+       if(Pallina.intersects(ostacolo1) && od==2) {
 
             Pallina.velocitaX = Math.abs(Pallina.velocitaX);
 //            Pallina.velocitaX++;
@@ -113,8 +199,10 @@ public class OggettiDiScena extends JPanel implements Runnable{
             Pallina.setXDirection(Pallina.velocitaX);
             Pallina.setYDirection(Pallina.velocitaY);
         }
-        if(Pallina.intersects(giocatore2)) {
-//            spia= false;
+
+
+        if(Pallina.intersects(ostacolo2) && od==1) {
+
             Pallina.velocitaX = Math.abs(Pallina.velocitaX);
 //            Pallina.velocitaX++;
 //            if(Pallina.velocitaY>0)
@@ -124,27 +212,63 @@ public class OggettiDiScena extends JPanel implements Runnable{
             Pallina.setXDirection(-Pallina.velocitaX);
             Pallina.setYDirection(Pallina.velocitaY);
         }
+        if(Pallina.intersects(ostacolo2) && od==2) {
 
-        //pallina colpisce ghiaccio e frizza giocatore di destra
-        if(Pallina.intersects(freeze) && (id==1)) {
-            KeyEvent e = null;
-            if(e.getKeyCode()==KeyEvent.VK_UP) {
-                giocatore2.y= 0;;
-            }
-            if(e.getKeyCode()==KeyEvent.VK_DOWN) {
-                giocatore2.y= 0;
-            }
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+//            Pallina.velocitaX++;
+//            if(Pallina.velocitaY>0)
+//                Pallina.velocitaY++;
+//            else
+//                Pallina.velocitaY--;
+            Pallina.setXDirection(Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
         }
 
-        //pallina colpisce ghiaccio e frizza giocatore di sinistra
-        else if(Pallina.intersects(freeze) && (id!=1)) {
-            KeyEvent e = null;
-            if(e.getKeyCode()==KeyEvent.VK_W) {
-                giocatore1.y= 0;
-            }
-            if(e.getKeyCode()==KeyEvent.VK_S) {
-                giocatore1.y= 0;
-            }
+        if(Pallina.intersects(ostacolo3) && od==1) {
+
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+//            Pallina.velocitaX++;
+//            if(Pallina.velocitaY>0)
+//                Pallina.velocitaY++;
+//            else
+//                Pallina.velocitaY--;
+            Pallina.setXDirection(-Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
+        }
+        if(Pallina.intersects(ostacolo3) && od==2) {
+
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+//            Pallina.velocitaX++;
+//            if(Pallina.velocitaY>0)
+//                Pallina.velocitaY++;
+//            else
+//                Pallina.velocitaY--;
+            Pallina.setXDirection(Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
+        }
+
+
+        if(Pallina.intersects(ostacolo4) && od==1) {
+
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+//            Pallina.velocitaX++;
+//            if(Pallina.velocitaY>0)
+//                Pallina.velocitaY++;
+//            else
+//                Pallina.velocitaY--;
+            Pallina.setXDirection(-Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
+        }
+        if(Pallina.intersects(ostacolo4) && od==2) {
+
+            Pallina.velocitaX = Math.abs(Pallina.velocitaX);
+//            Pallina.velocitaX++;
+//            if(Pallina.velocitaY>0)
+//                Pallina.velocitaY++;
+//            else
+//                Pallina.velocitaY--;
+            Pallina.setXDirection(Pallina.velocitaX);
+            Pallina.setYDirection(Pallina.velocitaY);
         }
 
 

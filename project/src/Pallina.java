@@ -7,7 +7,7 @@ public class Pallina extends Rectangle{
     Random random;
     int velocitaX;
     int velocitaY;
-    int velocita0 = 6;
+    int velocita0 = 4;
 
     //costruttore
     Pallina(int x, int y, int width, int height){
